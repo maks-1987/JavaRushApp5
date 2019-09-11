@@ -27,6 +27,18 @@ public class MainActivity extends AppCompatActivity {
         displayPrice(numberOfCoffees * 5);
     }
 
+    public void incrementOrder(View view) {
+        int quantity = 3;
+        display(quantity);
+        //displayPrice(quantity++);
+    }
+
+    public void decrementOrder(View view) {
+        int quantity = 1;
+        display(quantity);
+        //displayPrice(quantity--);
+    }
+
     /**
      * This method displays the given quantity value on the screen.
      */
