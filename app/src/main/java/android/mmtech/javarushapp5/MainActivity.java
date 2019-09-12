@@ -9,6 +9,8 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 
 public class MainActivity extends AppCompatActivity {
+
+    int quantity = 2;
     /**
      * This app displays an order form to order coffee.
      */
@@ -22,21 +24,19 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        int numberOfCoffees = 2;
-        display(numberOfCoffees);
+        int numberOfCoffees = quantity;
         displayPrice(numberOfCoffees * 5);
+        display(numberOfCoffees);
     }
 
     public void incrementOrder(View view) {
-        int quantity = 3;
+        quantity = quantity + 1;
         display(quantity);
-        //displayPrice(quantity++);
     }
 
     public void decrementOrder(View view) {
-        int quantity = 1;
+        quantity = quantity - 1;
         display(quantity);
-        //displayPrice(quantity--);
     }
 
     /**
