@@ -27,33 +27,29 @@ public class MainActivity extends AppCompatActivity {
         int price = quantity * 5;
         String message = "Total: $" + price + "\n" + "Thank You!";
         displayMessage(message);
+
+        calculatePrice(quantity);
+        calculatePrice(quantity, 5);
+        calculatePrice();
     }
 
     public void incrementOrder(View view) {
         quantity = quantity + 1;
-        display(quantity);
+        displayQuantity(quantity);
     }
 
     public void decrementOrder(View view) {
         quantity = quantity - 1;
-        display(quantity);
+        displayQuantity(quantity);
     }
 
     /**
      * This method displays the given quantity value on the screen.
      */
-    private void display(int number) {
+    private void displayQuantity(int number) {
         TextView quantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         quantityTextView.setText("" + number);
     }
-
-//    /**
-//     * Отображает цену на экран
-//     */
-//    private void displayPrice(int number) {
-//        TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
-//        priceTextView.setText(NumberFormat.getCurrencyInstance().format(number));
-//    }
 
     /**
      * This method displays the given text on the screen.
@@ -61,6 +57,26 @@ public class MainActivity extends AppCompatActivity {
     private void displayMessage(String message) {
         TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
         priceTextView.setText(message);
+    }
+
+    /**
+     * Рассчитать цену
+     * @param quantity количество чашек
+     * @return возвращ уже рассчитанную цену
+     */
+    private int calculatePrice(int quantity) {
+        int price = quantity * 5;
+        return  price;
+    }
+
+    private int calculatePrice(int quantity, int number) {
+        int price = quantity * number;
+        return  price;
+    }
+
+    private int calculatePrice() {
+        int price = 0;
+        return  price;
     }
 
 }
