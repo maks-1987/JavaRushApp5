@@ -24,13 +24,16 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        int price = quantity * 5;
-        String message = "Total: $" + price + "\n" + "Thank You!";
+        int price = calculatePrice();
+        createOrderSummary(price);
+    }
+
+    void createOrderSummary(int price) {
+        String name = "Kaptain Max";
+        String message = "Name: " + name + "\n" + "Quantity: " + quantity + "\n" +
+                         "Total: $" + price + "\n" + "Thank you!";
         displayMessage(message);
 
-        calculatePrice(quantity);
-        calculatePrice(quantity, 5);
-        calculatePrice();
     }
 
     public void incrementOrder(View view) {
@@ -59,23 +62,18 @@ public class MainActivity extends AppCompatActivity {
         priceTextView.setText(message);
     }
 
+//    private void displayPrice(int price) {
+//        String message = "Total: $" + price + "\n" + "Thank You!";
+//        displayMessage(message);
+//    }
+
     /**
      * Рассчитать цену
      * @param quantity количество чашек
      * @return возвращ уже рассчитанную цену
      */
-    private int calculatePrice(int quantity) {
-        int price = quantity * 5;
-        return  price;
-    }
-
-    private int calculatePrice(int quantity, int number) {
-        int price = quantity * number;
-        return  price;
-    }
-
     private int calculatePrice() {
-        int price = 0;
+        int price = quantity * 5;
         return  price;
     }
 
