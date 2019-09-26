@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import java.text.NumberFormat;
-
 public class MainActivity extends AppCompatActivity {
 
     int quantity = 2;
@@ -26,13 +24,14 @@ public class MainActivity extends AppCompatActivity {
     public void submitOrder(View view) {
         int price = calculatePrice();
         createOrderSummary(price);
+        displayMessage(createOrderSummary(price));
     }
 
-    void createOrderSummary(int price) {
+    String createOrderSummary(int price) {
         String name = "Kaptain Max";
         String message = "Name: " + name + "\n" + "Quantity: " + quantity + "\n" +
                          "Total: $" + price + "\n" + "Thank you!";
-        displayMessage(message);
+        return message;
 
     }
 
@@ -58,14 +57,9 @@ public class MainActivity extends AppCompatActivity {
      * This method displays the given text on the screen.
      */
     private void displayMessage(String message) {
-        TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText(message);
+        TextView orderSummaryTextView = (TextView) findViewById(R.id.order_summary_text_view);
+        orderSummaryTextView.setText(message);
     }
-
-//    private void displayPrice(int price) {
-//        String message = "Total: $" + price + "\n" + "Thank You!";
-//        displayMessage(message);
-//    }
 
     /**
      * Рассчитать цену
