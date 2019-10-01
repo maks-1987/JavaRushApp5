@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">JavaRushApp5</string>
+    <string name="order">ORDER</string>
+    <string name="price_order">$10,00</string>
 </resources>
