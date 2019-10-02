@@ -3,12 +3,15 @@ package android.mmtech.javarushapp5;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     int quantity = 2;
+
     /**
      * This app displays an order form to order coffee.
      */
@@ -23,16 +26,27 @@ public class MainActivity extends AppCompatActivity {
      */
     public void submitOrder(View view) {
         int price = calculatePrice();
-        createOrderSummary(price);
-        displayMessage(createOrderSummary(price));
+        boolean hasCream = check(view);
+        displayMessage(createOrderSummary(price, hasCream));
     }
 
-    String createOrderSummary(int price) {
-        String name = "Kaptain Max";
-        String message = "Name: " + name + "\n" + "Quantity: " + quantity + "\n" +
-                         "Total: $" + price + "\n" + "Thank you!";
-        return message;
+    /**
+     * Создает чек-переменную значение false - put, true - no put
+     */
+    public boolean check(View view) {
+        CheckBox whippedCream = (CheckBox) findViewById(R.id.checked_whipped_cream);
+        boolean hasCream = whippedCream.isChecked(); // проверяет состояние чек-бокса
+        Log.v("MainActivity", "checkBox status is " + hasCream);
+        return hasCream;
+    }
 
+    String createOrderSummary(int price, boolean hasWhippedCream) {
+        boolean isWhippedCream = hasWhippedCream;
+        String name = "Kaptain Max";
+        String message = "Name: " + name + "\n" + "Add whipped cream? " + isWhippedCream +
+                "\n" + "Quantity: " + quantity + "\n" + "Total: $" + price + "\n" +
+                "Thank you!";
+        return message;
     }
 
     public void incrementOrder(View view) {
@@ -63,12 +77,13 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Рассчитать цену
-     * @param quantity количество чашек
+     * @param "quantity" количество чашек
      * @return возвращ уже рассчитанную цену
      */
     private int calculatePrice() {
         int price = quantity * 5;
         return  price;
     }
+
 
 }
