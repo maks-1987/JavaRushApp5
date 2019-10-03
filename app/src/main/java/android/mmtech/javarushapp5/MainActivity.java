@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     int quantity = 2;
+    int priceSummary;
 
     /**
      * This app displays an order form to order coffee.
@@ -25,28 +27,44 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        int price = calculatePrice();
-        boolean hasCream = check(view);
-        displayMessage(createOrderSummary(price, hasCream));
+        priceSummary = calculatePrice();
+        boolean hasCream = checkCream(view);
+        boolean hasChocolate = checkChocolate(view);
+        displayMessage(createOrderSummary(priceSummary, hasCream, hasChocolate));
     }
 
     /**
      * Создает чек-переменную значение false - put, true - no put
      */
-    public boolean check(View view) {
+    public boolean checkCream(View view) {
         CheckBox whippedCream = (CheckBox) findViewById(R.id.checked_whipped_cream);
         boolean hasCream = whippedCream.isChecked(); // проверяет состояние чек-бокса
         Log.v("MainActivity", "checkBox status is " + hasCream);
         return hasCream;
     }
 
-    String createOrderSummary(int price, boolean hasWhippedCream) {
-        boolean isWhippedCream = hasWhippedCream;
-        String name = "Kaptain Max";
-        String message = "Name: " + name + "\n" + "Add whipped cream? " + isWhippedCream +
-                "\n" + "Quantity: " + quantity + "\n" + "Total: $" + price + "\n" +
-                "Thank you!";
-        return message;
+    public boolean checkChocolate(View view) {
+        CheckBox chocolate = (CheckBox) findViewById(R.id.checked_chocolate);
+        boolean hasChocolate = chocolate.isChecked(); // проверяет состояние чек-бокса
+        Log.v("MainActivity", "checkBox status is " + hasChocolate);
+        return hasChocolate;
+    }
+
+    String createOrderSummary(int priceSummary, boolean hasWhippedCream, boolean hasChocolate) {
+        EditText editText = (EditText) findViewById(R.id.name_edit_text);
+        String name = editText.getText().toString();
+
+        //int price = 0;
+        if (hasWhippedCream == true) {
+            priceSummary = quantity * 5 + quantity * 2;
+        }
+        if (hasChocolate == true) {
+            priceSummary = quantity * 5 + quantity * 3;
+        }
+
+        return "Name: " + name + "\n" + "Add whipped cream? (2$) " + hasWhippedCream + "\n" +
+                "Add chocolate? (3$) " + hasChocolate + "\n" + "Quantity: " + quantity + "\n" +
+                "Total: $" + priceSummary + "\n" + "Thank you!";
     }
 
     public void incrementOrder(View view) {
@@ -77,13 +95,15 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Рассчитать цену
+     *
      * @param "quantity" количество чашек
      * @return возвращ уже рассчитанную цену
      */
     private int calculatePrice() {
-        int price = quantity * 5;
-        return  price;
+        priceSummary = quantity * 5;
+        return priceSummary;
+
     }
 
-
 }
+
