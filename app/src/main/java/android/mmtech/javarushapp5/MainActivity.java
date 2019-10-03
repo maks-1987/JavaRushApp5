@@ -12,7 +12,8 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     int quantity = 2;
-    int priceSummary;
+    int priceSummary, priceCream, priceChocolate;
+    boolean hasWhippedCream, hasChocolate;
 
     /**
      * This app displays an order form to order coffee.
@@ -27,10 +28,10 @@ public class MainActivity extends AppCompatActivity {
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        priceSummary = calculatePrice();
+
         boolean hasCream = checkCream(view);
         boolean hasChocolate = checkChocolate(view);
-        displayMessage(createOrderSummary(priceSummary, hasCream, hasChocolate));
+        displayMessage(createOrderSummary(hasCream, hasChocolate));
     }
 
     /**
@@ -50,18 +51,10 @@ public class MainActivity extends AppCompatActivity {
         return hasChocolate;
     }
 
-    String createOrderSummary(int priceSummary, boolean hasWhippedCream, boolean hasChocolate) {
+    String createOrderSummary(boolean hasWhippedCream, boolean hasChocolate) {
         EditText editText = (EditText) findViewById(R.id.name_edit_text);
         String name = editText.getText().toString();
-
-        //int price = 0;
-        if (hasWhippedCream == true) {
-            priceSummary = quantity * 5 + quantity * 2;
-        }
-        if (hasChocolate == true) {
-            priceSummary = quantity * 5 + quantity * 3;
-        }
-
+        this.priceSummary = calculatePrice();
         return "Name: " + name + "\n" + "Add whipped cream? (2$) " + hasWhippedCream + "\n" +
                 "Add chocolate? (3$) " + hasChocolate + "\n" + "Quantity: " + quantity + "\n" +
                 "Total: $" + priceSummary + "\n" + "Thank you!";
@@ -100,8 +93,15 @@ public class MainActivity extends AppCompatActivity {
      * @return возвращ уже рассчитанную цену
      */
     private int calculatePrice() {
-        priceSummary = quantity * 5;
-        return priceSummary;
+        int price = quantity * 5;
+
+        /*if (hasWhippedCream == true) {
+            priceCream = quantity * 2;
+        }
+        if (hasChocolate == true) {
+            priceChocolate = quantity * 3;
+        }*/
+        return priceSummary = price + priceCream + priceChocolate;
 
     }
 
