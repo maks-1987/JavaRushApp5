@@ -2,18 +2,18 @@ package android.mmtech.javarushapp5;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    int quantity = 2;
-    int priceSummary, priceCream, priceChocolate;
-    boolean hasWhippedCream, hasChocolate;
+    int quantity = 0;
 
     /**
      * This app displays an order form to order coffee.
@@ -24,49 +24,81 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
+    String editTextName() {
+        EditText editText = (EditText) findViewById(R.id.name_edit_text);
+        String name = editText.getText().toString();
+        return(name);
+    }
+
     /**
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
+        String name = editTextName();
+        boolean hasCream = checkCream();
+        boolean hasChocolate = checkChocolate();
+        int price = calculatePrice();
+        String message = createOrderSummary(name, price, hasCream, hasChocolate);
+        //displayMessage(message);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType(message);
 
-        boolean hasCream = checkCream(view);
-        boolean hasChocolate = checkChocolate(view);
-        displayMessage(createOrderSummary(hasCream, hasChocolate));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
     /**
      * Создает чек-переменную значение false - put, true - no put
      */
-    public boolean checkCream(View view) {
+    public boolean checkCream() {
         CheckBox whippedCream = (CheckBox) findViewById(R.id.checked_whipped_cream);
         boolean hasCream = whippedCream.isChecked(); // проверяет состояние чек-бокса
         Log.v("MainActivity", "checkBox status is " + hasCream);
         return hasCream;
     }
 
-    public boolean checkChocolate(View view) {
+    public boolean checkChocolate() {
         CheckBox chocolate = (CheckBox) findViewById(R.id.checked_chocolate);
         boolean hasChocolate = chocolate.isChecked(); // проверяет состояние чек-бокса
         Log.v("MainActivity", "checkBox status is " + hasChocolate);
         return hasChocolate;
     }
 
-    String createOrderSummary(boolean hasWhippedCream, boolean hasChocolate) {
-        EditText editText = (EditText) findViewById(R.id.name_edit_text);
-        String name = editText.getText().toString();
-        this.priceSummary = calculatePrice();
-        return "Name: " + name + "\n" + "Add whipped cream? (2$) " + hasWhippedCream + "\n" +
-                "Add chocolate? (3$) " + hasChocolate + "\n" + "Quantity: " + quantity + "\n" +
-                "Total: $" + priceSummary + "\n" + "Thank you!";
+    String createOrderSummary(String name, int price, boolean hasWhippedCream, boolean hasChocolate) {
+        String priceMessage = "Name: " + name;
+        return "Name: " + name + "\nAdd whipped cream? (2$) " + hasWhippedCream +
+                "\nAdd chocolate? (3$) " + hasChocolate + "\nQuantity: " + quantity +
+                "\nTotal: $" + price + "\n" + getString(R.string.thank_you);
     }
 
+    /**
+     * Увелич кол-во чашек на единицу и выводит текст Тоста внизу экр
+     */
     public void incrementOrder(View view) {
-        quantity = quantity + 1;
+        if (quantity >= 15) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Ты шо, опписяешси!", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        if (quantity < 15) {
+            quantity = quantity + 1;
+        }
         displayQuantity(quantity);
     }
 
+    /**
+     * Уменьш кол-во чашек на единицу и выводит текст Тоста внизу экр
+     */
     public void decrementOrder(View view) {
-        quantity = quantity - 1;
+        if (quantity > 0) {
+            quantity = quantity - 1;
+        }
+        if (quantity <= 0) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Ты шо, куда меньше то?", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
         displayQuantity(quantity);
     }
 
@@ -81,28 +113,33 @@ public class MainActivity extends AppCompatActivity {
     /**
      * This method displays the given text on the screen.
      */
-    private void displayMessage(String message) {
+    /*private void displayMessage(String message) {
         TextView orderSummaryTextView = (TextView) findViewById(R.id.order_summary_text_view);
         orderSummaryTextView.setText(message);
-    }
+    }*/
 
     /**
      * Рассчитать цену
-     *
      * @param "quantity" количество чашек
      * @return возвращ уже рассчитанную цену
      */
     private int calculatePrice() {
-        int price = quantity * 5;
+        int oneCoffee = 5;
+        int priceWithToppings = toppingsPrice() + oneCoffee;
+        int totalPrice = priceWithToppings * quantity;
 
-        /*if (hasWhippedCream == true) {
-            priceCream = quantity * 2;
-        }
-        if (hasChocolate == true) {
-            priceChocolate = quantity * 3;
-        }*/
-        return priceSummary = price + priceCream + priceChocolate;
+        return totalPrice;
+    }
 
+    /**
+     * Считает дополнит ингры в кофе и вернет сумму их для одной чашки
+     */
+    private int toppingsPrice() {
+        int priceToppings = 0;
+        if (checkCream()) priceToppings += 2;
+        if (checkChocolate()) priceToppings += 3;
+
+        return priceToppings;
     }
 
 }
