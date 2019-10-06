@@ -3,6 +3,7 @@ package android.mmtech.javarushapp5;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,14 +36,15 @@ public class MainActivity extends AppCompatActivity {
      */
     public void submitOrder(View view) {
         String name = editTextName();
-        boolean hasCream = checkCream();
-        boolean hasChocolate = checkChocolate();
+        String hasCream = checkCream();
+        String hasChocolate = checkChocolate();
         int price = calculatePrice();
         String message = createOrderSummary(name, price, hasCream, hasChocolate);
-        //displayMessage(message);
+        /** создаст интент с возможнстью открыть на выбор плюс текст из createOrderSummary */
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType(message);
-
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.just_java_order_for) + " " + name);
+        intent.putExtra(Intent.EXTRA_TEXT, message);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
@@ -51,22 +53,27 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Создает чек-переменную значение false - put, true - no put
      */
-    public boolean checkCream() {
+    public String checkCream() {
         CheckBox whippedCream = (CheckBox) findViewById(R.id.checked_whipped_cream);
-        boolean hasCream = whippedCream.isChecked(); // проверяет состояние чек-бокса
-        Log.v("MainActivity", "checkBox status is " + hasCream);
-        return hasCream;
+        if (whippedCream.isChecked()) {
+            return "Yes";
+        } else {
+            return "No";
+        }
+        //Log.v("MainActivity", "checkBox status is " + hasCream);
     }
 
-    public boolean checkChocolate() {
+    public String checkChocolate() {
         CheckBox chocolate = (CheckBox) findViewById(R.id.checked_chocolate);
-        boolean hasChocolate = chocolate.isChecked(); // проверяет состояние чек-бокса
-        Log.v("MainActivity", "checkBox status is " + hasChocolate);
-        return hasChocolate;
+        if (chocolate.isChecked()) {
+            return "Yes";
+        } else {
+            return "No";
+        }
+        //Log.v("MainActivity", "checkBox status is " + hasChocolate);
     }
 
-    String createOrderSummary(String name, int price, boolean hasWhippedCream, boolean hasChocolate) {
-        String priceMessage = "Name: " + name;
+    String createOrderSummary(String name, int price, String hasWhippedCream, String hasChocolate) {
         return "Name: " + name + "\nAdd whipped cream? (2$) " + hasWhippedCream +
                 "\nAdd chocolate? (3$) " + hasChocolate + "\nQuantity: " + quantity +
                 "\nTotal: $" + price + "\n" + getString(R.string.thank_you);
@@ -76,13 +83,12 @@ public class MainActivity extends AppCompatActivity {
      * Увелич кол-во чашек на единицу и выводит текст Тоста внизу экр
      */
     public void incrementOrder(View view) {
-        if (quantity >= 15) {
+        if (quantity < 10) {
+            quantity++;
+        } else if (quantity == 10) {
             Toast toast = Toast.makeText(getApplicationContext(), "Ты шо, опписяешси!", Toast.LENGTH_SHORT);
             toast.show();
             return;
-        }
-        if (quantity < 15) {
-            quantity = quantity + 1;
         }
         displayQuantity(quantity);
     }
@@ -92,9 +98,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public void decrementOrder(View view) {
         if (quantity > 0) {
-            quantity = quantity - 1;
-        }
-        if (quantity <= 0) {
+            quantity--;
+        } else if (quantity == 0) {
             Toast toast = Toast.makeText(getApplicationContext(), "Ты шо, куда меньше то?", Toast.LENGTH_SHORT);
             toast.show();
             return;
@@ -107,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void displayQuantity(int number) {
         TextView quantityTextView = (TextView) findViewById(R.id.quantity_text_view);
-        quantityTextView.setText("" + number);
+        quantityTextView.setText(String.valueOf(number));
     }
 
     /**
@@ -136,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private int toppingsPrice() {
         int priceToppings = 0;
-        if (checkCream()) priceToppings += 2;
-        if (checkChocolate()) priceToppings += 3;
+        if (checkCream().equals("Yes")) priceToppings += 2;
+        if (checkChocolate().equals("Yes")) priceToppings += 3;
 
         return priceToppings;
     }
