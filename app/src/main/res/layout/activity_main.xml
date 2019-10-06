@@ -21,7 +21,8 @@
             android:layout_margin="8dp"
             android:hint="@string/input_name"
             android:inputType="textCapWords"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:autofillHints="" />
 
         <TextView
             android:layout_width="wrap_content"
